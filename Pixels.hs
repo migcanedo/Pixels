@@ -1,5 +1,6 @@
 -- module Pixels (...) where
 import Data.Char
+import Data.List
 
 fontBitmap =
   [
@@ -106,14 +107,6 @@ type Pixels = [String]
 {-
 
 -}
-rotarl :: [[a]] -> [[a]]
-rotarl [] = []
-rotarl ([]:_) = []
-rotarl m = map last m : (rotarl (map init m))
-
-{-
-
--}
 config :: String -> String
 config xs = if (n < 7) then replicate (7 - n) ' ' ++ xs else xs
     where n = length xs
@@ -137,12 +130,13 @@ hexToBin n
 -}
 font :: Char -> Pixels
 font l = rotarl $ map (config . hexToBin) (fontBitmap !! (ord l - 32))
+    where rotarl = reverse . transpose
 
 {-
 
 -}
 pixelsToString :: Pixels -> String
-pixelsToString msg = undefined
+pixelsToString = undefined
 
 {-
 
