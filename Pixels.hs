@@ -129,8 +129,12 @@ hexToBin n
 
 -}
 font :: Char -> Pixels
-font l = rotarl $ map (config . hexToBin) (fontBitmap !! (ord l - 32))
-    where rotarl = reverse . transpose
+font l 
+  | (asciiValue >= 32 && asciiValue <= 125) = rotarl $ map (config . hexToBin) (fontBitmap !! (asciiValue - 32))
+  | otherwise = rotarl $ map hexToBin [0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+  where asciiValue = ord l
+        rotarl = reverse . transpose
+        
 
 {-
 
