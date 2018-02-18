@@ -193,16 +193,17 @@ right = undefined
 
 -}
 upsideDown :: Pixels ->Pixels
-upsideDown = undefined
+upsideDown = reverse
 
 {-
 
 -}
 backwards :: Pixels -> Pixels
-backwards = undefined
+backwards = map reverse
 
 {-
 
 -}
 negative :: Pixels -> Pixels
-negative = undefined
+negative = map $ map inv
+  where inv = (\p -> if (p == '*') then ' ' else '*')
