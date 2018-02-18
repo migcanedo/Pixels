@@ -134,7 +134,6 @@ font l
   | otherwise = rotarl $ map hexToBin [0x7F, 0x7F, 0x7F, 0x7F, 0x7F]
   where asciiValue = ord l
         rotarl = reverse . transpose
-        
 
 {-
 
@@ -158,14 +157,13 @@ pixelListToString = concat . map pixelsToString
 
 -}
 concatPixels :: [Pixels] -> Pixels
-concatPixels = undefined
-
+concatPixels =  map concat . transpose
 
 {-
 
 -}
 messageToPixels :: String -> Pixels
-messageToPixels xs = undefined 
+messageToPixels = map (intercalate " ") . transpose . map font 
 
 {-
 
