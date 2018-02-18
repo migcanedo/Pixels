@@ -1,6 +1,6 @@
 -- module Pixels (...) where
 import Data.Char
-import Data.List
+import Data.List (transpose, intercalate)
 
 fontBitmap =
   [
@@ -131,7 +131,7 @@ hexToBin n
 font :: Char -> Pixels
 font l 
   | (asciiValue >= 32 && asciiValue <= 125) = rotarl $ map (config . hexToBin) (fontBitmap !! (asciiValue - 32))
-  | otherwise = rotarl $ map hexToBin [0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
+  | otherwise = rotarl $ map hexToBin [0x7F, 0x7F, 0x7F, 0x7F, 0x7F]
   where asciiValue = ord l
         rotarl = reverse . transpose
         
@@ -140,19 +140,19 @@ font l
 
 -}
 pixelsToString :: Pixels -> String
-pixelsToString = undefined
+pixelsToString = concat . map (++"\n")
 
 {-
 
 -}
 pixelListToPixels :: [Pixels] -> Pixels
-pixelListToPixels = undefined
+pixelListToPixels = intercalate [""]
 
 {-
 
 -}
 pixelListToString :: [Pixels] -> String
-pixelListToString = undefined
+pixelListToString = concat . map pixelsToString
 
 {-
 
