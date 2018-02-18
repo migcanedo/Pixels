@@ -1,5 +1,5 @@
 # ProyectoHaskell
-Proyecto de la materia de Laboratio de Lenguajes 1 sobre manejo del lenguaje "Haskell".
+Proyecto de la materia Laboratorio de Lenguajes de Programación 1 sobre el manejo del lenguaje Haskell.
 
 ## Autores
 
