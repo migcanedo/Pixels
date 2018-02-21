@@ -1,7 +1,53 @@
--- module Pixels (...) where
-import Data.Char
+{-|
+Module      : Pixels
+Descripcion : Representacion de caracteres ASCII en mapa de Bits.
+Autores     : Miguel Canedo 13-10214    (2018)
+              Andres Buelvas 13-10184 (2018)
+Fuente     : https://github.com/migcanedo/ProyectoHaskell
+
+
+-}
+
+module Pixels 
+    (   
+        --* Tipo.
+        Pixel,
+        --* Funciones.
+        font,
+        pixelsToString,
+        pixelListToPixels,
+        pixelListToString,
+        concatPixels,
+        up,
+        down,
+        left,
+        right,
+        upsideDown,
+        backwards,
+        negative
+    ) where
+
 import Data.List (transpose, intercalate)
 
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+--                        Tipo Pixel                           --
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+
+{- | Alias del tipo [String] que sera utilizado para contener el mapa de bits
+de tamaño 7x5, donde el valor 1 se representa por un '*' (Asterisco) y 
+el valor cero por un ' ' (Espacio en blanco).
+-}
+type Pixel = [String]
+
+
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+--               Representaciones en el Mapa.                  --
+-----------------------------------------------------------------
+-----------------------------------------------------------------
 fontBitmap =
   [
     [ 0x00, 0x00, 0x00, 0x00, 0x00 ], --  (space)
@@ -100,19 +146,24 @@ fontBitmap =
     [ 0x00, 0x41, 0x36, 0x08, 0x00 ]  --  }
   ]
 
--- ASCII from 32 to 125
-
-type Pixels = [String]
-
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+--                  Funciones Auxiliares.                      --
+-----------------------------------------------------------------
+-----------------------------------------------------------------
 {-
-
+    Función auxiliar  de la función 'font' que dado un String de 
+    tamaño menor que 7, le agrega al comienzo del mismo tanto 
+    espacios en blanco necesite para que su tamaño sea exactamente 7.
 -}
 config :: String -> String
 config xs = if (n < 7) then replicate (7 - n) ' ' ++ xs else xs
     where n = length xs
 
 {-
-
+    Función auxiliar de la función font que dado un nùmero entero,
+    calcula su Representacion Binaria de tal forma que el 1 es 
+    representado por '*' y el 0 por ' '.
 -}
 hexToBin :: Integer -> String
 hexToBin 0 = ""
@@ -120,90 +171,96 @@ hexToBin n
     | n `mod` 2 == 0 = hexToBin (n `div` 2) ++ " "
     | otherwise = hexToBin (n `div` 2) ++ "*"
 
-{----------------------------------------------------------------
 -----------------------------------------------------------------
-                    Funciones Obligatorias.
 -----------------------------------------------------------------
------------------------------------------------------------------}
-{-
+--                  Funciones del Modulo.                      --
+-----------------------------------------------------------------
+-----------------------------------------------------------------
+{- | Función que dado un caracter, devuelve el Pixel que representa 
+    al mismo. En caso de que dicho caracter no sea un carcater ASCII,
+    la función devolverá un Pixel con todos los bits encendidos.
 
 -}
-font :: Char -> Pixels
+font :: Char -> Pixel
 font l 
   | (asciiValue >= 32 && asciiValue <= 125) = rotarl $ map (config . hexToBin) (fontBitmap !! (asciiValue - 32))
   | otherwise = rotarl $ map hexToBin [0x7F, 0x7F, 0x7F, 0x7F, 0x7F]
-  where asciiValue = ord l
+  where asciiValue = fromEnum l
         rotarl = reverse . transpose
 
-{-
-
+{- | Función que dado un Pixel, devuelve un String donde separa cada 
+    fila del Pixel por un salto de linea ('\n').
 -}
-pixelsToString :: Pixels -> String
+pixelsToString :: Pixel -> String
 pixelsToString = concat . map (++"\n")
 
-{-
-
+{- | Función que dada una lista de Pixels, devuelve un Pixel único 
+    que contenga a todos los Pixels de la lista separanadolos por una 
+    fila vacia.
 -}
-pixelListToPixels :: [Pixels] -> Pixels
+pixelListToPixels :: [Pixel] -> Pixel
 pixelListToPixels = intercalate [""]
 
-{-
-
+{- | Función que dada una lista de Pixels, devuelve un String donde 
+    separa cada fila del Pixel por un salto de linea ('\n').
 -}
-pixelListToString :: [Pixels] -> String
+pixelListToString :: [Pixel] -> String
 pixelListToString = concat . map pixelsToString
 
-{-
-
+{- | Función que dada una lista de Pixels, devuleve un Pixel único con
+    todos los Pixels de la lista concatenados de forma Horizontal.
 -}
-concatPixels :: [Pixels] -> Pixels
+concatPixels :: [Pixel] -> Pixel
 concatPixels =  map concat . transpose
 
-{-
-
+{- | Función que dado un String, devuelve un Pixel que es construido 
+    mediante la concatenación horizontal de los caracteres, dejando 
+    un espacio en balcon entre ellos.
 -}
-messageToPixels :: String -> Pixels
+messageToPixels :: String -> Pixel
 messageToPixels = map (intercalate " ") . transpose . map font 
 
-{-
-
+{- | Función que dado un Pixel, devuelve un Pixel con todas sus filas 
+    desplazadas una posición hacia arriba, mandando la primera fila a 
+    la última posición.
 -}
-up :: Pixels -> Pixels
-up = undefined
+up :: Pixel -> Pixel
+up xs = tail xs ++ [head xs]
 
-{-
-
+{- | Función que dado un Pixel, devuelve un Pixel con todas sus filas 
+    desplazadas una posición hacia abajo, mandando la última fila a 
+    la primera posición.
 -}
-down :: Pixels -> Pixels
-down = undefined
+down :: Pixel -> Pixel
+down xs = last xs : init xs
 
-{-
-
+{- | Función que dado un Pixel, devuelve un Pixel con todas sus columnas
+    desplazadas una posición hacia izquierda, mandando la primera columna 
+    a la última posición.
 -}
-left :: Pixels -> Pixels
-left = undefined
+left :: Pixel -> Pixel
+left = map f
+  where f xs = tail xs ++ [head xs]
 
-{-
-
+{- | Función que dado un Pixel, devuelve un Pixel con todas sus columnas 
+    desplazas una posición hacia derecha, mandando la última columna 
+    a la primera posición.
 -}
-right :: Pixels -> Pixels
-right = undefined
+right :: Pixel -> Pixel
+right = map f
+  where f xs = last xs : init xs
 
-{-
-
--}
-upsideDown :: Pixels ->Pixels
+--| Función que dado un Pixel, devuelve el reverso vertical de ese Pixel.
+upsideDown :: Pixel -> Pixel
 upsideDown = reverse
 
-{-
-
--}
-backwards :: Pixels -> Pixels
+--| Función que dado un Pixel, devuelve el reverso horizontal de ese Pixel.
+backwards :: Pixel -> Pixel
 backwards = map reverse
 
-{-
-
+{- | Función que dado un Pixel, devuelve un Pixel donde cada bit será el 
+    opuesto al original.
 -}
-negative :: Pixels -> Pixels
+negative :: Pixel -> Pixel
 negative = map $ map inv
   where inv = (\p -> if (p == '*') then ' ' else '*')
