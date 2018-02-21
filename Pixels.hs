@@ -5,14 +5,22 @@ Autores     : Miguel Canedo 13-10214    (2018)
               Andres Buelvas 13-10184 (2018)
 Fuente     : https://github.com/migcanedo/ProyectoHaskell
 
-
+    El modulo Pixels contendrá todas las funciones, procedimientos y tipo
+    que permitirán representar todos los caracteres imprimibles de la tabla 
+    ASCII en pixeles, incluyendo espacios en blanco, y a su vez permitirá 
+    la manipulación de los mismos. Los pixeles seran dibujados a partir de
+    astericos '*' y espacios vacíos ' ', un pixel encendido y un pixel apagado
+    respectivamente. La representación será una lista que siempre tiene
+    siete (7) elementos, cada uno de los cuales es una cada de caracteres que 
+    siempre tiene cinco (5) caracteres.
 -}
+
 
 module Pixels 
     (   
-        --* Tipo.
+        -- * Tipo.
         Pixel,
-        --* Funciones.
+        -- * Funciones.
         font,
         pixelsToString,
         pixelListToPixels,
@@ -250,11 +258,11 @@ right :: Pixel -> Pixel
 right = map f
   where f xs = last xs : init xs
 
---| Función que dado un Pixel, devuelve el reverso vertical de ese Pixel.
+-- | Función que dado un Pixel, devuelve el reverso vertical de ese Pixel.
 upsideDown :: Pixel -> Pixel
 upsideDown = reverse
 
---| Función que dado un Pixel, devuelve el reverso horizontal de ese Pixel.
+-- | Función que dado un Pixel, devuelve el reverso horizontal de ese Pixel.
 backwards :: Pixel -> Pixel
 backwards = map reverse
 
